@@ -22,7 +22,8 @@ class Application(tk.Frame):
 
     # Validate the password
     def validate(self, password):
-        if password == 'toto':
+        jsonDictionnary = self.file.getJson()
+        if password == self.encrypter.decrypt(jsonDictionnary["MainPassword"]):
             self.delete_frame(self.frameHome)
             self.create_widgets_passwords()
 
@@ -50,7 +51,7 @@ class Application(tk.Frame):
         self.framePasswords = tk.Frame(root, bg='green')
         self.framePasswords.pack(expand=True, fill=tk.BOTH, padx=30, pady=30)
 
-        jsonDictionnary = self.file.getJson()
+        jsonDictionnary = self.file.getJson()["Applications"]
 
         user = {}
         password = {}
@@ -98,27 +99,36 @@ class Application(tk.Frame):
         btDelete.pack(side="left")
 
     def modifyAccounts(self, user, password):
+        jsonDictionnaryAccounts = self.file.getJson()["Applications"]
         jsonDictionnary = self.file.getJson()
 
-        for key in jsonDictionnary:
-            jsonDictionnary[key]["User"] = user[key].get()
-            jsonDictionnary[key]["Password"] = self.encrypter.encrypt(password[key].get())
+        for key in jsonDictionnaryAccounts:
+            jsonDictionnaryAccounts[key]["User"] = user[key].get()
+            jsonDictionnaryAccounts[key]["Password"] = self.encrypter.encrypt(password[key].get())
 
-        print(jsonDictionnary)
+        jsonDictionnary["Applications"].update(jsonDictionnaryAccounts)
+
         self.file.setJson(jsonDictionnary)
 
     def addAccount(self, plateform):
+        jsonDictionnaryAccounts = self.file.getJson()["Applications"]
         jsonDictionnary = self.file.getJson()
+
         newAccount = {plateform: {'User': 'default', 'Password': self.encrypter.encrypt('default')}}
-        jsonDictionnary.update(newAccount)
+
+        jsonDictionnaryAccounts.update(newAccount)
+        jsonDictionnary["Applications"].update(jsonDictionnaryAccounts)
+
         self.setAndReloadFrame(jsonDictionnary)
 
     def deleteAccounts(self, hasToDelete):
         if askyesno('Validation', 'Êtes-vous sûr de vouloir faire ça?'):
             jsonDictionnary = self.file.getJson()
+
             for key in hasToDelete:
                 if hasToDelete[key].get():
-                    del jsonDictionnary[key]
+                    del jsonDictionnary["Applications"][key]
+
             self.setAndReloadFrame(jsonDictionnary)
             showinfo('Suppression', 'Suppression effectuée')
 
@@ -129,11 +139,11 @@ class Application(tk.Frame):
 
 class File:
     def getJson(self):
-        with open('mdp.json') as file:
+        with open('data/mdp.json') as file:
             return json.load(file)
 
     def setJson(self, data):
-        with open('mdp.json', 'w') as file:
+        with open('data/mdp.json', 'w') as file:
             json.dump(data, file, indent=4)
 
 
@@ -149,18 +159,14 @@ class Encrypter:
         return dataBytes
 
     def encrypt(self, data):
-        print(data)
         bytes = self.stringToBytes(data)
-        print(bytes)
         f = Fernet(self.key)
         data = f.encrypt(bytes)
         dataReturned = self.bytesToString(data)
         return dataReturned
 
     def decrypt(self, data):
-        print(data)
         bytes = self.stringToBytes(data)
-        print(bytes)
         f = Fernet(self.key)
         data = f.decrypt(bytes)
         dataReturned = self.bytesToString(data)
