@@ -53,6 +53,7 @@ class Application(tk.Frame):
 
         user = {}
         password = {}
+        hasToDelete = {}
         for key in jsonDictionnary:
             framePassword = tk.Frame(self.framePasswords, bg='blue')
             framePassword.pack(side=tk.TOP)
@@ -70,6 +71,12 @@ class Application(tk.Frame):
             entryPassword = tk.Entry(framePassword, textvariable=password[key], width=30)
             entryPassword.pack(side="left")
 
+            hasToDelete[key] = tk.IntVar()
+            checkBoxDelete = tk.Checkbutton(framePassword, text="Supprimer?", variable=hasToDelete[key],
+                                            onvalue=1, offvalue=0, height=5,
+                                            width=20, )
+            checkBoxDelete.pack()
+
         newAccount = tk.StringVar()
         newAccount.set('Plateforme')
         entryNewAccount = tk.Entry(self.framePasswords, textvariable=newAccount, width=30)
@@ -83,6 +90,11 @@ class Application(tk.Frame):
                              command=lambda: self.modifyAccounts(user, password))
 
         btModify.pack(side="left")
+
+        btDelete = tk.Button(self.framePasswords, text="Supprimer",
+                             command=lambda: self.deleteAccounts(hasToDelete))
+
+        btDelete.pack(side="left")
 
     def modifyAccounts(self, user, password):
         jsonDictionnary = self.file.getJson()
@@ -98,13 +110,19 @@ class Application(tk.Frame):
         jsonDictionnary = self.file.getJson()
         newAccount = {plateform: {'User': 'default', 'Password': self.encrypter.encrypt('default')}}
         jsonDictionnary.update(newAccount)
+        self.setAndReloadFrame(jsonDictionnary)
+
+    def deleteAccounts(self, hasToDelete):
+        jsonDictionnary = self.file.getJson()
+        for key in hasToDelete:
+            if hasToDelete[key].get():
+                del jsonDictionnary[key]
+        self.setAndReloadFrame(jsonDictionnary)
+
+    def setAndReloadFrame(self, jsonDictionnary):
         self.file.setJson(jsonDictionnary)
         self.delete_frame(self.framePasswords)
         self.create_widgets_passwords()
-
-    def deleteAccounts(self):
-        print('toto')
-
 
 class File:
     def getJson(self):
@@ -117,7 +135,6 @@ class File:
 
 
 class Encrypter:
-
     key = b'Gg91BbmzEad1OyTOGF4wdQNWcmuOlNcvY4-rpHtK3YE='
 
     def bytesToString(self, dataBytes):
