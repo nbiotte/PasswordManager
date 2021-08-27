@@ -120,6 +120,7 @@ class Application(tk.Frame):
                 if hasToDelete[key].get():
                     del jsonDictionnary[key]
             self.setAndReloadFrame(jsonDictionnary)
+            showinfo('Suppression', 'Suppression effectuée')
 
     def setAndReloadFrame(self, jsonDictionnary):
         self.file.setJson(jsonDictionnary)
