@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter.messagebox import *
 import json
 from cryptography.fernet import Fernet
 import base64
@@ -113,11 +114,12 @@ class Application(tk.Frame):
         self.setAndReloadFrame(jsonDictionnary)
 
     def deleteAccounts(self, hasToDelete):
-        jsonDictionnary = self.file.getJson()
-        for key in hasToDelete:
-            if hasToDelete[key].get():
-                del jsonDictionnary[key]
-        self.setAndReloadFrame(jsonDictionnary)
+        if askyesno('Validation', 'Êtes-vous sûr de vouloir faire ça?'):
+            jsonDictionnary = self.file.getJson()
+            for key in hasToDelete:
+                if hasToDelete[key].get():
+                    del jsonDictionnary[key]
+            self.setAndReloadFrame(jsonDictionnary)
 
     def setAndReloadFrame(self, jsonDictionnary):
         self.file.setJson(jsonDictionnary)
