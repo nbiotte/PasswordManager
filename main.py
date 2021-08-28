@@ -26,12 +26,12 @@ class ScrollableFrame(tk.Frame):
             )
         )
 
-        canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        canvas.create_window((0, 0), window=self.scrollable_frame, anchor=tk.NW)
 
         canvas.configure(yscrollcommand=scrollbar.set)
 
-        canvas.pack(side="left", fill="both", expand=True)
-        scrollbar.pack(side="right", fill="y")
+        canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5, pady=5)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
 class Application(tk.Frame):
     def __init__(self, master=None):
@@ -61,12 +61,12 @@ class Application(tk.Frame):
         password.set("toto")
 
         entry = tk.Entry(self.frameHome, textvariable=password, width=30)
-        entry.pack(side="top")
+        entry.pack(side=tk.TOP)
 
         btValidate = tk.Button(self.frameHome, text="Valider",
                                command=lambda: self.validate(password.get()))
 
-        btValidate.pack(side="top")
+        btValidate.pack(side=tk.TOP)
 
     def create_widgets_passwords(self):
         self.mainFrame = tk.Frame(root, bg='red')
@@ -84,43 +84,43 @@ class Application(tk.Frame):
             framePassword = tk.Frame(self.framePasswords.scrollable_frame, bg='blue')
             framePassword.pack(fill=tk.BOTH, side=tk.TOP, padx=5, pady=5)
             label = tk.Label(framePassword, text=key, width=30)
-            label.pack(side="left", padx=5, pady=5)
+            label.pack(side=tk.LEFT, padx=5, pady=5)
 
             user[key] = tk.StringVar()
             user[key].set(jsonDictionnary[key]["User"])
             entryUser = tk.Entry(framePassword, textvariable=user[key], width=30)
-            entryUser.pack(side="left", padx=5, pady=5)
+            entryUser.pack(side=tk.LEFT, padx=5, pady=5)
 
             password[key] = tk.StringVar()
             password[key].set(self.encrypter.decrypt(jsonDictionnary[key]["Password"]))
             entryPassword = tk.Entry(framePassword, textvariable=password[key], width=30)
-            entryPassword.pack(side="left", padx=5, pady=5)
+            entryPassword.pack(side=tk.LEFT, padx=5, pady=5)
 
             hasToDelete[key] = tk.IntVar()
             checkBoxDelete = tk.Checkbutton(framePassword, text="Supprimer?", variable=hasToDelete[key],
                                             onvalue=1, offvalue=0)
-            checkBoxDelete.pack(side='right', padx=5, pady=5)
+            checkBoxDelete.pack(side=tk.RIGHT, padx=5, pady=5)
 
         newAccount = tk.StringVar()
         newAccount.set('Plateforme')
         entryNewAccount = tk.Entry(self.mainFrame, textvariable=newAccount, width=30)
-        entryNewAccount.pack(side="left")
+        entryNewAccount.pack(side=tk.LEFT)
 
         btAddAccount = tk.Button(self.mainFrame, text="Ajouter un compte",
                                  command=lambda: self.addAccount(newAccount.get()))
-        btAddAccount.pack(side="left")
+        btAddAccount.pack(side=tk.LEFT)
 
         btModify = tk.Button(self.mainFrame, text="Enregistrer",
                              command=lambda: self.modifyAccounts(user, password))
-        btModify.pack(side="left")
+        btModify.pack(side=tk.LEFT)
 
         btDelete = tk.Button(self.mainFrame, text="Supprimer",
                              command=lambda: self.deleteAccounts(hasToDelete))
-        btDelete.pack(side="left")
+        btDelete.pack(side=tk.LEFT)
 
         btModifyMainPassword = tk.Button(self.mainFrame, text="Modifier mot de passe principal",
                              command=self.modifyMainPassword)
-        btModifyMainPassword.pack(side="left")
+        btModifyMainPassword.pack(side=tk.LEFT)
 
     def modifyAccounts(self, user, password):
         jsonDictionnaryAccounts = self.file.getJson()["Applications"]
@@ -201,7 +201,8 @@ class Encrypter:
 
 
 root = tk.Tk()
-root.geometry('750x500')
+root.geometry("773x500")
+root.resizable(width=False, height=True)
 root.title('Gestionnaire de mots de passe')
 app = Application(master=root)
 app.mainloop()

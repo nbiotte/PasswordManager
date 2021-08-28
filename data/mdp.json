@@ -3,19 +3,27 @@
     "Applications": {
         "Facebook": {
             "User": "toto",
-            "Password": "gAAAAABhKlrHgFkII7KVyFGQmQqV2SnJP9Bpf6ynjsfUtJmGn1jQhDKNXez8Bmf5Ra8cuC5BbKw-Dix2MZd0R5UmQZiUyItO3A=="
+            "Password": "gAAAAABhKnQj5S4Hu24FGiRrshfiqgdV7kY8jjU9gBoMab9ohFXBk2JUdfIjAEV0poBYGQMxCljWtqksGFAhsU99Gf34d4uRkw=="
         },
         "Plateforme": {
             "User": "default",
-            "Password": "gAAAAABhKlrHz9BQBFSExsG_qHpLUiqCBX8iZV65AIHAEoE67MZH091_Zhto9EeQB91DxM76BGZ7GAPIqevgH7AcKClYGAP0MQ=="
+            "Password": "gAAAAABhKnQjR3cDRLaryAogoCiGlIhE2DJZEfDb91vwo0VmvDw4JwYGI6b7pUfhX77N7pXY5fL9o_RYS7npcMeKSGp0m2V8pg=="
         },
         "Plateformet": {
             "User": "default",
-            "Password": "gAAAAABhKlrHl5M_C3G9-0VPL2_yD14R9bGWBeiPfPhZVhWd94NiuqN2UjapmctMOaeWkg58i4SdDdRupekHy5yLwClxOZDfqw=="
+            "Password": "gAAAAABhKnQjKmr9VzvNwPwpuA1r51oOEyzI4OwyZG2O6_LujSejX_U6Ru0yaWtasQ8ExF1R0MkGYpjG-ryXIrWjTv6pAekgRg=="
         },
         "Plateformesdf": {
             "User": "default",
-            "Password": "gAAAAABhKlrHwYh7yfitvdQ_ffb7CzEAYRRBU_pIDe9RiBslOFhZT8w2u_V0h4zOIxySX76WymxSHlNEaIJzGAd3CKi8CGe1Xg=="
+            "Password": "gAAAAABhKnQju-oF2n6Mniv7eqtLIpwDklxNz-Dt_bF4o7LepFy8fyJlRkg4210yZnCwVtgAxbujSxJAmWAMDDfef4zuXouYnw=="
+        },
+        "PlateformezkufdvslbjcolGDFLsb dc": {
+            "User": "default",
+            "Password": "gAAAAABhKnQjIiHrM-VvHvWAf8skUY_ifYShC9xoYhuYBoUbKpKGM59FAMJwc_AGOhtfD7k2dAc9WibzcbL0Drs6VZHO7ftZ0A=="
+        },
+        "ZLClqhlsbdUIDBklq dUKYDGlAAAAAAAAAAAAAAA": {
+            "User": "default",
+            "Password": "gAAAAABhKnQjp8kDw___Zlpnusg9pnuMF-JeqrzO3xa7Rt1cksb7Gv6P7EFuKv4yOUxSxKObN-F_DSMxNG7yN12-_3_NleG8Mw=="
         }
     }
 }
