@@ -3,7 +3,19 @@
     "Applications": {
         "Facebook": {
             "User": "toto",
-            "Password": "gAAAAABhKNqjP3HM2veXVAH_eOSVOLAYxkWzufrZzjuFU6ZmuN9UGcTwMO_Bo7M4c39yg77JlzobL9czOslnmgaVec-dK16N0g=="
+            "Password": "gAAAAABhKlrHgFkII7KVyFGQmQqV2SnJP9Bpf6ynjsfUtJmGn1jQhDKNXez8Bmf5Ra8cuC5BbKw-Dix2MZd0R5UmQZiUyItO3A=="
+        },
+        "Plateforme": {
+            "User": "default",
+            "Password": "gAAAAABhKlrHz9BQBFSExsG_qHpLUiqCBX8iZV65AIHAEoE67MZH091_Zhto9EeQB91DxM76BGZ7GAPIqevgH7AcKClYGAP0MQ=="
+        },
+        "Plateformet": {
+            "User": "default",
+            "Password": "gAAAAABhKlrHl5M_C3G9-0VPL2_yD14R9bGWBeiPfPhZVhWd94NiuqN2UjapmctMOaeWkg58i4SdDdRupekHy5yLwClxOZDfqw=="
+        },
+        "Plateformesdf": {
+            "User": "default",
+            "Password": "gAAAAABhKlrHwYh7yfitvdQ_ffb7CzEAYRRBU_pIDe9RiBslOFhZT8w2u_V0h4zOIxySX76WymxSHlNEaIJzGAd3CKi8CGe1Xg=="
         }
     }
 }
