@@ -64,8 +64,8 @@ class MainApplication(tk.Frame):
         self.mainFrame = tk.Frame(self.window, bg='red')
         self.mainFrame.pack(expand=True, fill=tk.BOTH, padx=5, pady=5)
 
-        self.framePasswords = ScrollableFrame(self.mainFrame, bg='green')
-        self.framePasswords.pack(expand=True, fill=tk.BOTH, padx=5, pady=5)
+        self.passwordsFrame = ScrollableFrame(self.mainFrame, bg='green')
+        self.passwordsFrame.pack(expand=True, fill=tk.BOTH, padx=5, pady=5)
 
         jsonDictionnary = self.file.getJson()["Applications"]
 
@@ -73,7 +73,7 @@ class MainApplication(tk.Frame):
         password = {}
         hasToDelete = {}
         for key in jsonDictionnary:
-            framePassword = tk.Frame(self.framePasswords.scrollable_frame, bg='blue')
+            framePassword = tk.Frame(self.passwordsFrame.scrollable_frame, bg='blue')
             framePassword.pack(fill=tk.BOTH, side=tk.TOP, padx=5, pady=5)
             label = tk.Label(framePassword, text=key, width=30)
             label.pack(side=tk.LEFT, padx=5, pady=5)
@@ -89,30 +89,33 @@ class MainApplication(tk.Frame):
             entryPassword.pack(side=tk.LEFT, padx=5, pady=5)
 
             hasToDelete[key] = tk.IntVar()
-            checkBoxDelete = tk.Checkbutton(framePassword, text="Supprimer?", variable=hasToDelete[key],
+            checkBoxDelete = tk.Checkbutton(framePassword, variable=hasToDelete[key],
                                             onvalue=1, offvalue=0)
             checkBoxDelete.pack(side=tk.RIGHT, padx=5, pady=5)
+
+        buttonsFrame = tk.Frame(self.mainFrame, bg='yellow')
+        buttonsFrame.pack(side=tk.BOTTOM, expand=True, fill=tk.BOTH, padx=5, pady=5)
+
+        btAddAccount = tk.Button(self.mainFrame, text="Ajouter un compte",
+                                 command=lambda: self.addAccount(newAccount.get()))
+        btAddAccount.pack(side=tk.RIGHT, padx=10, pady=5)
 
         newAccount = tk.StringVar()
         newAccount.set('Plateforme')
         entryNewAccount = tk.Entry(self.mainFrame, textvariable=newAccount, width=30)
-        entryNewAccount.pack(side=tk.LEFT)
+        entryNewAccount.pack(side=tk.RIGHT, pady=5)
 
-        btAddAccount = tk.Button(self.mainFrame, text="Ajouter un compte",
-                                 command=lambda: self.addAccount(newAccount.get()))
-        btAddAccount.pack(side=tk.LEFT)
+        btModifyMainPassword = tk.Button(buttonsFrame, text="Modifier mot de passe principal",
+                             command=self.modifyMainPassword)
+        btModifyMainPassword.pack(side=tk.LEFT, padx=5, pady=5)
 
         btModify = tk.Button(self.mainFrame, text="Enregistrer",
                              command=lambda: self.modifyAccounts(user, password))
-        btModify.pack(side=tk.LEFT)
+        btModify.pack(side=tk.LEFT, padx=50, pady=5)
 
         btDelete = tk.Button(self.mainFrame, text="Supprimer",
                              command=lambda: self.deleteAccounts(hasToDelete))
-        btDelete.pack(side=tk.LEFT)
-
-        btModifyMainPassword = tk.Button(self.mainFrame, text="Modifier mot de passe principal",
-                             command=self.modifyMainPassword)
-        btModifyMainPassword.pack(side=tk.LEFT)
+        btDelete.pack( padx=50, pady=5)
 
     def modifyAccounts(self, user, password):
         jsonDictionnaryAccounts = self.file.getJson()["Applications"]

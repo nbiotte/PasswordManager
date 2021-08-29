@@ -9,7 +9,7 @@ from model import application
 
 # Press the green button in the gutter to run the script.
 mainWindow = tk.Tk()
-mainWindow.geometry("773x500")
+mainWindow.geometry("713x500")
 mainWindow.resizable(width=False, height=True)
 mainWindow.title('Gestionnaire de mots de passe')
 app = application.MainApplication(master=mainWindow)
