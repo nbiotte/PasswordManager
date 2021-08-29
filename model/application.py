@@ -28,21 +28,21 @@ class MainApplication(tk.Frame):
     def __init__(self, master=None):
         self.window = master
         super().__init__(self.window)
+        self.createMenuBar(self.window)
         self.file = file.File()
         self.encrypter = encrypter.Encrypter()
         self.pack()
         self.createWidgetsHome()
 
-    # Validate the password
-    def validate(self, password):
-        jsonDictionnary = self.file.getJson()
-        if password == self.encrypter.decrypt(jsonDictionnary["MainPassword"]):
-            self.deleteFrame(self.frameHome)
-            self.createWidgetsPasswords()
+    def createMenuBar(self, window):
+        menubar = tk.Menu(window)
+        fileMenu = tk.Menu(menubar, tearoff=0)
+        fileMenu.add_command(label="Modifier le mot de passe principal", command=self.modifyMainPassword)
+        fileMenu.add_separator()
+        fileMenu.add_command(label="Quitter", command=window.quit)
+        menubar.add_cascade(label="Fichier", menu=fileMenu)
+        window.config(menu=menubar)
 
-    # Delete the frame
-    def deleteFrame(self, frame):
-        frame.destroy()
 
     # create widgets for home page
     def createWidgetsHome(self):
@@ -50,7 +50,7 @@ class MainApplication(tk.Frame):
         self.frameHome.pack(expand=True, fill=tk.BOTH, padx=30, pady=30)
 
         password = tk.StringVar()
-        password.set("toto")
+        # password.set("toto")
 
         entry = tk.Entry(self.frameHome, textvariable=password, width=30)
         entry.pack(side=tk.TOP)
@@ -93,9 +93,6 @@ class MainApplication(tk.Frame):
                                             onvalue=1, offvalue=0)
             checkBoxDelete.pack(side=tk.RIGHT, padx=5, pady=5)
 
-        buttonsFrame = tk.Frame(self.mainFrame, bg='yellow')
-        buttonsFrame.pack(side=tk.BOTTOM, expand=True, fill=tk.BOTH, padx=5, pady=5)
-
         btAddAccount = tk.Button(self.mainFrame, text="Ajouter un compte",
                                  command=lambda: self.addAccount(newAccount.get()))
         btAddAccount.pack(side=tk.RIGHT, padx=10, pady=5)
@@ -105,10 +102,6 @@ class MainApplication(tk.Frame):
         entryNewAccount = tk.Entry(self.mainFrame, textvariable=newAccount, width=30)
         entryNewAccount.pack(side=tk.RIGHT, pady=5)
 
-        btModifyMainPassword = tk.Button(buttonsFrame, text="Modifier mot de passe principal",
-                             command=self.modifyMainPassword)
-        btModifyMainPassword.pack(side=tk.LEFT, padx=5, pady=5)
-
         btModify = tk.Button(self.mainFrame, text="Enregistrer",
                              command=lambda: self.modifyAccounts(user, password))
         btModify.pack(side=tk.LEFT, padx=50, pady=5)
@@ -116,6 +109,17 @@ class MainApplication(tk.Frame):
         btDelete = tk.Button(self.mainFrame, text="Supprimer",
                              command=lambda: self.deleteAccounts(hasToDelete))
         btDelete.pack( padx=50, pady=5)
+
+    # Delete the frame
+    def deleteFrame(self, frame):
+        frame.destroy()
+
+    # Validate the password
+    def validate(self, password):
+        jsonDictionnary = self.file.getJson()
+        if password == self.encrypter.decrypt(jsonDictionnary["MainPassword"]):
+            self.deleteFrame(self.frameHome)
+            self.createWidgetsPasswords()
 
     def modifyAccounts(self, user, password):
         jsonDictionnaryAccounts = self.file.getJson()["Applications"]
