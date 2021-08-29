@@ -35,13 +35,13 @@ class MainApplication(tk.Frame):
         self.createWidgetsHome()
 
     def createMenuBar(self, window):
-        menubar = tk.Menu(window)
-        fileMenu = tk.Menu(menubar, tearoff=0)
+        menuBar = tk.Menu(window)
+        fileMenu = tk.Menu(menuBar, tearoff=0)
         fileMenu.add_command(label="Modifier le mot de passe principal", command=self.modifyMainPassword)
         fileMenu.add_separator()
         fileMenu.add_command(label="Quitter", command=window.quit)
-        menubar.add_cascade(label="Fichier", menu=fileMenu)
-        window.config(menu=menubar)
+        menuBar.add_cascade(label="Fichier", menu=fileMenu)
+        window.config(menu=menuBar)
 
 
     # create widgets for home page
