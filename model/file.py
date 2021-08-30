@@ -4,9 +4,11 @@ import os
 
 class File:
     def getJson(self):
+        if not os.path.isdir("data/"):
+            os.mkdir("data/")
         if not os.path.isfile('data/mdp.json'):
-            # open('data/mdp.json', "x")
-            newJson = {"MainPassword": "gAAAAABhKNqjP3HM2veXVAH_eOSVOLAYxkWzufrZzjuFU6ZmuN9UGcTwMO_Bo7M4c39yg77JlzobL9czOslnmgaVec-dK16N0g==", "Applications": {}}
+            open('data/mdp.json', "x")
+            newJson = {"MainPassword": "gAAAAABhLVEfytuDPiu2FaBQEeU95eV1Kt4eC82U_KOByWm3RvOlzlaXQz7xhuHzKCFclTYpPHfJIO3Ptkm6bw2Bu4Z_irMw1g==", "Applications": {}}
             self.setJson(newJson)
 
         with open('data/mdp.json') as file:
