@@ -37,7 +37,7 @@ class MainApplication(tk.Frame):
     def createMenuBar(self, window):
         menuBar = tk.Menu(window)
         fileMenu = tk.Menu(menuBar, tearoff=0)
-        fileMenu.add_command(label="Ajouter un compte", command=self.addAccount2)
+        fileMenu.add_command(label="Ajouter un compte", command=self.addAccount)
         fileMenu.add_command(label="Modifier le mot de passe principal", command=self.modifyMainPassword)
         fileMenu.add_separator()
         fileMenu.add_command(label="Quitter", command=window.quit)
@@ -94,15 +94,6 @@ class MainApplication(tk.Frame):
                                             onvalue=1, offvalue=0)
             checkBoxDelete.pack(side=tk.RIGHT, padx=5, pady=5)
 
-        btAddAccount = tk.Button(self.mainFrame, text="Ajouter un compte",
-                                 command=lambda: self.addAccount(newAccount.get()))
-        btAddAccount.pack(side=tk.RIGHT, padx=10, pady=5)
-
-        newAccount = tk.StringVar()
-        newAccount.set('Plateforme')
-        entryNewAccount = tk.Entry(self.mainFrame, textvariable=newAccount, width=30)
-        entryNewAccount.pack(side=tk.RIGHT, pady=5)
-
         btModify = tk.Button(self.mainFrame, text="Enregistrer",
                              command=lambda: self.modifyAccounts(user, password))
         btModify.pack(side=tk.LEFT, padx=50, pady=5)
@@ -134,18 +125,6 @@ class MainApplication(tk.Frame):
 
         self.file.setJson(jsonDictionnary)
 
-    def addAccount(self, plateform):
-        jsonDictionnaryAccounts = self.file.getJson()["Applications"]
-        jsonDictionnary = self.file.getJson()
-
-        newAccount = {plateform: {'User': 'default', 'Password': self.encrypter.encrypt('default')}}
-
-        jsonDictionnaryAccounts.update(newAccount)
-        jsonDictionnary["Applications"].update(jsonDictionnaryAccounts)
-
-        self.file.setJson(jsonDictionnary)
-        self.reloadFrame()
-
     def deleteAccounts(self, hasToDelete):
         if askyesno('Validation', 'Êtes-vous sûr de vouloir faire ça?'):
             jsonDictionnary = self.file.getJson()
@@ -158,7 +137,7 @@ class MainApplication(tk.Frame):
             self.reloadFrame()
             showinfo('Suppression', 'Suppression effectuée')
 
-    def reloadFrame(self):
+    def reloadFrame(self, *args):
         print('toto')
         self.deleteFrame(self.mainFrame)
         self.createWidgetsPasswords()
@@ -172,15 +151,15 @@ class MainApplication(tk.Frame):
         app = ChangeMainPasswordApplication(master=secondaryWindow)
         app.mainloop()
 
-    def addAccount2(self):
+    def addAccount(self):
         secondaryWindow = tk.Toplevel()
         secondaryWindow.geometry("200x100")
         secondaryWindow.resizable(width=False, height=True)
         secondaryWindow.title('Ajouter un nouveau compte')
+        secondaryWindow.bind("<Destroy>", self.reloadFrame)
         secondaryWindow.grab_set()
         app = addAccountApplication(master=secondaryWindow)
         app.mainloop()
-        self.reloadFrame()
 
 class ChangeMainPasswordApplication(tk.Frame):
     def __init__(self, master=None):
