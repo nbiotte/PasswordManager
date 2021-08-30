@@ -1,4 +1,5 @@
 import tkinter as tk
+import sys
 from tkinter.messagebox import *
 from model import encrypter
 from model import file
@@ -28,11 +29,23 @@ class MainApplication(tk.Frame):
     def __init__(self, master=None):
         self.window = master
         super().__init__(self.window)
+        self.pack()
+        self.window.withdraw()
+        secondaryWindow = tk.Toplevel()
+        secondaryWindow.geometry("200x100")
+        secondaryWindow.resizable(width=False, height=True)
+        secondaryWindow.title('Login')
+        secondaryWindow.bind("<<Login>>", self.showMainWindow)
+        secondaryWindow.bind("<<Close>>", sys.exit)
+        app = loginApplication(master=secondaryWindow)
+        app.mainloop()
+
+    def showMainWindow(self, *args):
+        self.window.deiconify()
         self.createMenuBar(self.window)
         self.file = file.File()
         self.encrypter = encrypter.Encrypter()
-        self.pack()
-        self.createWidgetsHome()
+        self.createWidgetsPasswords()
 
     def createMenuBar(self, window):
         menuBar = tk.Menu(window)
@@ -43,23 +56,6 @@ class MainApplication(tk.Frame):
         fileMenu.add_command(label="Quitter", command=window.quit)
         menuBar.add_cascade(label="Fichier", menu=fileMenu)
         window.config(menu=menuBar)
-
-
-    # create widgets for home page
-    def createWidgetsHome(self):
-        self.frameHome = tk.Frame(self.window, bg='green')
-        self.frameHome.pack(expand=True, fill=tk.BOTH, padx=30, pady=30)
-
-        password = tk.StringVar()
-        password.set("test")
-
-        entry = tk.Entry(self.frameHome, textvariable=password, width=30)
-        entry.pack(side=tk.TOP)
-
-        btValidate = tk.Button(self.frameHome, text="Valider",
-                               command=lambda: self.validate(password.get()))
-
-        btValidate.pack(side=tk.TOP)
 
     def createWidgetsPasswords(self):
         self.mainFrame = tk.Frame(self.window, bg='red')
@@ -82,12 +78,12 @@ class MainApplication(tk.Frame):
 
             user[key] = tk.StringVar()
             user[key].set(jsonDictionnary[key]["User"])
-            entryUser = tk.Entry(framePassword, textvariable=user[key], width=30)
+            entryUser = tk.Entry(framePassword, textvariable=user[key], width=30, justify='center')
             entryUser.pack(side=tk.LEFT, padx=5, pady=5)
 
             password[key] = tk.StringVar()
             password[key].set(self.encrypter.decrypt(jsonDictionnary[key]["Password"]))
-            entryPassword = tk.Entry(framePassword, textvariable=password[key], show="*", width=30)
+            entryPassword = tk.Entry(framePassword, textvariable=password[key], show="*", width=30, justify='center')
             entryPassword.pack(side=tk.LEFT, padx=5, pady=5)
 
             hasToDelete[key] = tk.IntVar()
@@ -111,13 +107,6 @@ class MainApplication(tk.Frame):
     # Delete the frame
     def deleteFrame(self, frame):
         frame.destroy()
-
-    # Validate the password
-    def validate(self, password):
-        jsonDictionnary = self.file.getJson()
-        if password == self.encrypter.decrypt(jsonDictionnary["MainPassword"]):
-            self.deleteFrame(self.frameHome)
-            self.createWidgetsPasswords()
 
     def modifyAccounts(self, user, password):
         jsonDictionnaryAccounts = self.file.getJson()["Applications"]
@@ -173,6 +162,46 @@ class MainApplication(tk.Frame):
         app = addAccountApplication(master=secondaryWindow)
         app.mainloop()
 
+
+class loginApplication(tk.Frame):
+    def __init__(self, master=None):
+        self.window = master
+        super().__init__(self.window)
+        self.file = file.File()
+        self.encrypter = encrypter.Encrypter()
+        self.pack()
+        self.window.protocol("WM_DELETE_WINDOW", self.onClosing)
+        self.createWidgetsHome()
+
+    # create widgets for home page
+    def createWidgetsHome(self):
+        self.frameHome = tk.Frame(self.window, bg='green')
+        # self.frameHome.pack(expand=True, fill=tk.BOTH, padx=5, pady=5)
+        self.frameHome.place(relx=.5, rely=.5, anchor="center")
+
+        password = tk.StringVar()
+        password.set("test")
+
+        entry = tk.Entry(self.frameHome, textvariable=password, width=30, justify='center', show="*")
+        entry.pack()
+
+        btValidate = tk.Button(self.frameHome, text="Valider",
+                               command=lambda: self.validatePassword(password.get()))
+
+        btValidate.pack()
+
+    # Validate the password
+    def validatePassword(self, password):
+        jsonDictionnary = self.file.getJson()
+        if password == self.encrypter.decrypt(jsonDictionnary["MainPassword"]):
+            self.window.event_generate("<<Login>>")
+            self.window.destroy()
+
+    def onClosing(self):
+        self.window.event_generate("<<Close>>")
+        self.window.destroy()
+
+
 class ChangeMainPasswordApplication(tk.Frame):
     def __init__(self, master=None):
         self.window = master
@@ -187,7 +216,7 @@ class ChangeMainPasswordApplication(tk.Frame):
 
         password = tk.StringVar()
         password.set(self.encrypter.decrypt(jsonDictionnary["MainPassword"]))
-        entryPassword = tk.Entry(self.window, textvariable=password)
+        entryPassword = tk.Entry(self.window, textvariable=password, justify='center')
         entryPassword.pack(side=tk.TOP, padx=5, pady=5)
 
         btModifyMainPassword = tk.Button(self.window, text="Modifier mot de passe principal",
@@ -195,7 +224,6 @@ class ChangeMainPasswordApplication(tk.Frame):
         btModifyMainPassword.pack(side=tk.BOTTOM)
 
     def modifyPassword(self, password):
-        print(password.get())
         jsonDictionnary = self.file.getJson()
 
         newPassword = {"MainPassword": self.encrypter.encrypt(password.get())}
@@ -204,6 +232,7 @@ class ChangeMainPasswordApplication(tk.Frame):
 
         self.file.setJson(jsonDictionnary)
         self.window.destroy()
+
 
 class addAccountApplication(tk.Frame):
     def __init__(self, master=None):
@@ -216,7 +245,7 @@ class addAccountApplication(tk.Frame):
 
     def createWidgets(self):
         plateform = tk.StringVar()
-        entryPlateform = tk.Entry(self.window, textvariable=plateform, width=50)
+        entryPlateform = tk.Entry(self.window, textvariable=plateform, width=50, justify='center')
         entryPlateform.pack(side=tk.TOP, padx=5, pady=5)
 
         btAddAccount = tk.Button(self.window, text="Ajouter le compte",
