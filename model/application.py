@@ -68,6 +68,7 @@ class MainApplication(tk.Frame):
         self.passwordsFrame = ScrollableFrame(self.mainFrame, bg='green')
         self.passwordsFrame.pack(expand=True, fill=tk.BOTH, padx=5, pady=5)
 
+        imgCopy = tk.PhotoImage(file="image/CopyToClipBoard.png")
         jsonDictionnary = self.file.getJson()["Applications"]
 
         user = {}
@@ -86,7 +87,7 @@ class MainApplication(tk.Frame):
 
             password[key] = tk.StringVar()
             password[key].set(self.encrypter.decrypt(jsonDictionnary[key]["Password"]))
-            entryPassword = tk.Entry(framePassword, textvariable=password[key], width=30)
+            entryPassword = tk.Entry(framePassword, textvariable=password[key], show="*", width=30)
             entryPassword.pack(side=tk.LEFT, padx=5, pady=5)
 
             hasToDelete[key] = tk.IntVar()
@@ -94,13 +95,18 @@ class MainApplication(tk.Frame):
                                             onvalue=1, offvalue=0)
             checkBoxDelete.pack(side=tk.RIGHT, padx=5, pady=5)
 
+            btCopyToClipBoard = tk.Button(framePassword, image=imgCopy,
+                                 command=lambda key=key: self.CopyToClipBoard(key))
+            btCopyToClipBoard.image = imgCopy
+            btCopyToClipBoard.pack(side=tk.RIGHT, pady=5)
+
         btModify = tk.Button(self.mainFrame, text="Enregistrer",
                              command=lambda: self.modifyAccounts(user, password))
         btModify.pack(side=tk.LEFT, padx=50, pady=5)
 
         btDelete = tk.Button(self.mainFrame, text="Supprimer",
                              command=lambda: self.deleteAccounts(hasToDelete))
-        btDelete.pack( padx=50, pady=5)
+        btDelete.pack(side=tk.RIGHT, padx=50, pady=5)
 
     # Delete the frame
     def deleteFrame(self, frame):
@@ -136,6 +142,12 @@ class MainApplication(tk.Frame):
             self.file.setJson(jsonDictionnary)
             self.reloadFrame()
             showinfo('Suppression', 'Suppression effectuée')
+
+    def CopyToClipBoard(self, key):
+        jsonDictionnaryAccounts = self.file.getJson()["Applications"]
+
+        self.window.clipboard_clear()
+        self.window.clipboard_append(self.encrypter.decrypt(jsonDictionnaryAccounts[key]["Password"]))
 
     def reloadFrame(self, *args):
         if not args or type(args[0].widget) is tk.Toplevel:
