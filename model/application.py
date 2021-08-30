@@ -138,9 +138,9 @@ class MainApplication(tk.Frame):
             showinfo('Suppression', 'Suppression effectuée')
 
     def reloadFrame(self, *args):
-        print('toto')
-        self.deleteFrame(self.mainFrame)
-        self.createWidgetsPasswords()
+        if not args or type(args[0].widget) is tk.Toplevel:
+            self.deleteFrame(self.mainFrame)
+            self.createWidgetsPasswords()
 
     def modifyMainPassword(self):
         secondaryWindow = tk.Toplevel()
